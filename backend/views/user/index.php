@@ -10,7 +10,7 @@ use yii\grid\GridView;
 $this->title = '用户列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="box wsl-page-box">
 
     <?=$this->render('_search', ['model' => $searchModel]); ?>
 

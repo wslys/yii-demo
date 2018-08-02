@@ -4,20 +4,20 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ResourceList */
+/* @var $model common\models\User */
 
 $this->title = $model->label;
-$this->params['breadcrumbs'][] = ['label' => '资源列表', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '用户组列表', 'url' => ['user-group']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="box wsl-page-box">
 
     <p>
-        <?= Html::a('更新', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('删除', ['delete', 'id' => $model->id], [
+        <?= Html::a('更新', ['user-group-update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['user-group-delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => '确实要删除此项吗？',
                 'method' => 'post',
             ],
         ]) ?>
@@ -27,13 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'level',
             'label',
-            'icon',
-            'url:url',
-            'ctrl',
-            'act',
-            'disabled',
+            'describe',
             'create_at',
         ],
     ]) ?>

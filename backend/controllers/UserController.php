@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use common\models\search\UserGroupUserSearch;
+use common\models\UserGroup;
 use Yii;
 use common\models\User;
 use common\models\search\UserSearch;
@@ -98,9 +100,11 @@ class UserController extends Controller
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -108,6 +112,96 @@ class UserController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    /* ====== 用户组管理 ====== */
+    /**
+     * 用户组列表
+     * @return string
+     */
+    public function actionUserGroup() {
+        $searchModel = new UserGroup();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('user-group', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * 创建用户组
+     * @return string
+     */
+    public function actionUserGroupCreate() {
+        $model = new UserGroup();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['user-group-view', 'id' => $model->id]);
+        }
+
+        return $this->render('user-group-create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * 查看用户组信息
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionUserGroupView($id) {
+        return $this->render('user-group-view', [
+            'model' => $this->findGroupModel($id),
+        ]);
+    }
+
+    /**
+     * 更新用户组
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUserGroupUpdate($id)
+    {
+        $model = $this->findGroupModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['user-group-view', 'id' => $model->id]);
+        }
+
+        return $this->render('user-group-update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * 删除用户组
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionUserGroupDelete($id)
+    {
+        $this->findGroupModel($id)->delete();
+
+        return $this->redirect(['user-group']);
+    }
+
+
+    /* ====== 用户用户组分配 ====== */
+    public function actionUserGroupConf() {
+        $searchModel = new UserGroupUserSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('user-group-conf', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 
     /**
      * Finds the User model based on its primary key value.
@@ -119,6 +213,20 @@ class UserController extends Controller
     protected function findModel($id)
     {
         if (($model = User::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * @param $id
+     * @return UserGroup|null
+     * @throws NotFoundHttpException
+     */
+    protected function findGroupModel($id)
+    {
+        if (($model = UserGroup::findOne($id)) !== null) {
             return $model;
         }
 

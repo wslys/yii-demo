@@ -18,7 +18,7 @@ class ResourceListSearch extends ResourceList
     public function rules()
     {
         return [
-            [['id', 'level', 'disabled'], 'integer'],
+            [['id', 'level', 'disabled', 'parent_id'], 'integer'],
             [['label', 'icon', 'url', 'ctrl', 'act', 'create_at'], 'safe'],
         ];
     }
@@ -61,6 +61,7 @@ class ResourceListSearch extends ResourceList
         $query->andFilterWhere([
             'id' => $this->id,
             'level' => $this->level,
+            'parent_id' => $this->parent_id,
             'disabled' => $this->disabled,
             'create_at' => $this->create_at,
         ]);

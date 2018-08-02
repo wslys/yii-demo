@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\ResourceList;
 use frontend\models\SignupForm;
 use Yii;
 use yii\web\Controller;
@@ -61,7 +62,45 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $lists = ResourceList::find()->asArray()->orderBy('level, parent_id')->all();
+        $list_menu = [];
+        foreach ($lists as $item) {
+            $id = $item['id'];
+            $parent_id = $item['parent_id'];
+
+            if (!$parent_id) {
+                $list_menu[$id] = $item;
+            }else {
+                if (!isset($list_menu[$parent_id]['items']))
+                    $list_menu[$parent_id]['items'] = [];
+
+                $list_menu[$parent_id]['items'][$id] = $item;
+            }
+        }
+
+        $menus = [['label' => '菜单按钮', 'options' => ['class' => 'header']],];
+        foreach ($list_menu as $item) {
+            $menu = [
+                'label' => $item['label'],
+                'icon' => $item['icon'],
+                'url' => $item['url'],
+                'items' => []
+            ];
+            if (count($item['items']) > 0) {
+                foreach ($item['items'] as $_item) {
+                    $menu['items'][] = [
+                        'label' => $_item['label'],
+                        'icon' => $_item['icon'],
+                        'url' => [$_item['url']]
+                    ];
+                }
+            }
+            $menus[] = $menu;
+        }
+
+        return $this->render('index', [
+            'list_menu' => $menus
+        ]);
     }
 
     /**

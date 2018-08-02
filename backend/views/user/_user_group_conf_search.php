@@ -2,23 +2,24 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\UserGroup;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\search\UserSearch */
-/* @var $form yii\widgets\ActiveForm */
+$list = UserGroup::find()->asArray()->all();
+$listData = ['' => '==全部=='];
+foreach ($list as $item) {
+    $listData[$item['id']] = $item['label'];
+}
 ?>
 
-<div class="user-search">
+<div class="user-group-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['user-group-conf'],
         'method' => 'get',
         'options' => ['class' => 'form-inline'],
     ]); ?>
 
-    <?= $form->field($model, 'username') ?>
-
-    <?= $form->field($model, 'email') ?>
+    <?= $form->field($model, 'grouplabel')->dropDownList($listData); ?>
 
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>

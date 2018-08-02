@@ -6,15 +6,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
-$this->title = 'Create User';
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->title = '创建用户组';
+$this->params['breadcrumbs'][] = ['label' => '用户组列表', 'url' => ['user-group']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
+    <?= $this->render('_user_group_form', [
         'model' => $model,
     ]) ?>
 

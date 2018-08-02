@@ -7,3 +7,8 @@
  */
 $this->title = 'DashBoard';
 $this->params['breadcrumbs'][] = $this->title;
+?>
+
+<pre>
+    <?= var_dump($list_menu) ?>
+</pre>

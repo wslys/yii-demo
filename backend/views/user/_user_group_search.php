@@ -3,22 +3,17 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\search\UserSearch */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="user-search">
+<div class="user-group-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['user-group'],
         'method' => 'get',
         'options' => ['class' => 'form-inline'],
     ]); ?>
 
-    <?= $form->field($model, 'username') ?>
-
-    <?= $form->field($model, 'email') ?>
+    <?= $form->field($model, 'label') ?>
 
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>

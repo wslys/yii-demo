@@ -98,9 +98,11 @@ class ResourceController extends Controller
     /**
      * Deletes an existing ResourceList model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -109,6 +111,21 @@ class ResourceController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * @param $id
+     * @param int $disabled
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionProhibitResource($id, $disabled=1) {
+        $model = $this->findModel($id);
+        $model->disabled = $disabled;
+
+        if ($model->save()) {
+            return json_encode(['code' => 0, 'msg' => 'ok']);
+        }
+        return json_encode(['code' => 100, 'msg' => '禁用资源失败，请重试！']);
+    }
     /**
      * Finds the ResourceList model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

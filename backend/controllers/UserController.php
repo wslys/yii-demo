@@ -2,7 +2,8 @@
 
 namespace backend\controllers;
 
-use common\models\search\UserGroupUserSearch;
+use common\models\search\UserGroupSearch;
+use common\models\Group;
 use common\models\UserGroup;
 use Yii;
 use common\models\User;
@@ -119,7 +120,7 @@ class UserController extends Controller
      * @return string
      */
     public function actionUserGroup() {
-        $searchModel = new UserGroup();
+        $searchModel = new Group();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('user-group', [
@@ -133,7 +134,7 @@ class UserController extends Controller
      * @return string
      */
     public function actionUserGroupCreate() {
-        $model = new UserGroup();
+        $model = new Group();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['user-group-view', 'id' => $model->id]);
@@ -193,15 +194,41 @@ class UserController extends Controller
 
     /* ====== 用户用户组分配 ====== */
     public function actionUserGroupConf() {
-        $searchModel = new UserGroupUserSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $user_groups = Group::find()->asArray()->all();
         return $this->render('user-group-conf', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'user_groups' => $user_groups,
         ]);
     }
 
+    /**
+     * 设置用户分组
+     * @return string
+     */
+    public function actionConfUserGroup() {
+        if (Yii::$app->request->isAjax) {
+            $user_id = Yii::$app->request->post('user_id');
+            $group_id = Yii::$app->request->post('group_id');
+
+            $model = $this->findUserGroupModel($user_id);
+            $model->grout_id = $group_id;
+            if ($model->save()){
+                return json_encode([
+                    'code' => 0,
+                    'msg' => 'OK'
+                ]);
+            }else {
+                return json_encode([
+                    'code' => 100,
+                    'msg' => '失败！'
+                ]);
+            }
+        }
+    }
 
     /**
      * Finds the User model based on its primary key value.
@@ -221,15 +248,27 @@ class UserController extends Controller
 
     /**
      * @param $id
-     * @return UserGroup|null
+     * @return Group|null
      * @throws NotFoundHttpException
      */
     protected function findGroupModel($id)
     {
-        if (($model = UserGroup::findOne($id)) !== null) {
+        if (($model = Group::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findUserGroupModel($user_id)
+    {
+        $model = UserGroup::find()->where(['user_id'=>$user_id])->one();
+        if ($model !== null) {
+            return $model;
+        }else {
+            $model = new UserGroup();
+            $model->user_id = $user_id;
+            return $model;
+        }
     }
 }

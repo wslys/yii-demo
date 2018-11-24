@@ -2,9 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\models\UserGroup;
+use common\models\Group;
 
-$list = UserGroup::find()->asArray()->all();
+$list = Group::find()->asArray()->all();
 $listData = ['' => '==全部=='];
 foreach ($list as $item) {
     $listData[$item['id']] = $item['label'];

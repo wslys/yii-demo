@@ -2,8 +2,8 @@
 
 namespace common\models\search;
 
+use common\models\Group;
 use common\models\UserGroup;
-use common\models\UserGroupUser;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -13,7 +13,7 @@ use yii\db\Query;
 /**
  * ResourceListSearch represents the model behind the search form of `common\models\ResourceList`.
  */
-class UserGroupUserSearch extends UserGroupUser
+class UserGroupSearch extends UserGroup
 {
     public $grouplabel;
     

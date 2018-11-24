@@ -29,7 +29,7 @@ class ResourceList extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'resource_list';
+        return 'resource';
     }
 
     /**

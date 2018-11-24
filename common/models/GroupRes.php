@@ -12,7 +12,7 @@ use Yii;
  * @property int $user_group_id
  * @property string $create_at
  */
-class UserGroupRes extends \yii\db\ActiveRecord
+class GroupRes extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
